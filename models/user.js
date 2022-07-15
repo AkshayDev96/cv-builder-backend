@@ -19,6 +19,10 @@ const userSchema = mongoose.Schema({
     },password:{
         type:String,
         trim:true,
+    },address:{
+        type:String,
+    },careerObjective:{
+        type:String,
     },contactNo:{
         type:String,
         maxLength:10
@@ -29,6 +33,24 @@ const userSchema = mongoose.Schema({
         type:String
     },profileId:{
         type:String
+    },
+    defaultLayout:{
+        type:String,
+        enum:["layout1","layout2"],
+        default:"layout1"
+    },
+    educationDetails:{
+        type:Array
+    },
+    workDetails:{
+        type:Array
+    },projectDetails:{
+        type:Array
+    },skillsDetails:{
+        type:Array
+    },
+    socialMedia:{
+        type:Object
     }
 },{timestamps:true})
 

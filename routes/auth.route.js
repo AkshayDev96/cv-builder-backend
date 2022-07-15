@@ -11,7 +11,7 @@ route.get('/google/callback', passport.authenticate('google', {
 }))
 
 //For Facebook Signup/login
-route.get("/facebook", passport.authenticate('facebook', { scope: ['user_friends', 'manage_pages'] }))
+route.get("/facebook", passport.authenticate('facebook', { scope: ['user_friends'] }))
 route.get('/facebook/callback', passport.authenticate('facebook', {
     successRedirect: `${process.env.CLIENT_URL}/dashboard`,
     failureRedirect: `${process.env.CLIENT_URL}/login`
@@ -19,16 +19,14 @@ route.get('/facebook/callback', passport.authenticate('facebook', {
 
 //For logout session
 route.get('/logout', function (req, res){
-    req.session.destroy(function (err) {
-      res.redirect(process.env.CLIENT_URL); //Inside a callback… bulletproof!
-    });
+    res.redirect(process.env.CLIENT_URL);
 });
   
 
 
 //For login check
 route.get("/checkLogin", (req, res) => {
-    if(req.user && req.isAuthenticated()){
+    if(req.user){
      return  sendResponse(res,"User logged-in",{user:req?.user},200)
     }else{
         console.log("-------------user",req.user)

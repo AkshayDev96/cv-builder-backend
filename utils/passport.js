@@ -25,12 +25,13 @@ passport.use(new GoogleStrategy({
         //No user data
         const userObj = new userModel(providerUserProfile)
         const newData = await userObj.save()
-        return done(null, {...newData,token:genToken(newData)});
+        return done(null, {...newData?._doc,token:genToken(newData)});
       } else {
         //user already exists!
         return done(null, {...data[0]?._doc,token:genToken(data)});
       }
     }).catch((e)=>{
+      console.log(e)
       return done(e?.message, null);
     })
 
@@ -46,20 +47,18 @@ passport.use(new FacebookStrategy({
 },
   function (accessToken, refreshToken, profile, done) {
     let providerUserProfile = {
-      profileId: profile?.id,
-      firstName: profile?.name?.givenName,
-      lastName: profile?.name?.familyName,
-      profilePic: profile?._json?.picture,
-      email: profile?._json?.email,
+      profileId: profile?._json?.id,
+      firstName: profile?._json?.name?.split(" ")[0],
+      lastName: profile?._json?.name?.split(" ")[1],
+      profilePic: profile?._json?.picture?.data?.url,
       loginType: "facebook"
     };
-   
     userModel.find({ profileId: profile?.id }).then(async (data) => {
       if (data?.length == 0) {
         //No user data
         const userObj = new userModel(providerUserProfile)
         const newData = await userObj.save()
-        return done(null, {...newData,token:genToken(newData)});
+        return done(null, {...newData?._doc,token:genToken(newData)});
       } else {
         //user already exists!
         return done(null, {...data[0]?._doc,token:genToken(data)});
